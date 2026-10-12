@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CoWatch</title>
+<meta name="description" content="Watch videos in sync with friends, with live chat, reactions and party games. No account needed.">
+<link rel="icon" href="icon-128.png">
+<style>
+  /* Layout: one column. Brand mark + promise, one screenshot, three short feature lines, footer links. Single dark look on purpose (movie night). */
+  :root {
+    --bg: #111016; --surface: #1a1922; --line: #2e2b3a; --fg: #f1eff6; --muted: #a19db0;
+    --accent: #ff6178; --accent-2: #ff9a62;
+    --display: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--display); padding: 56px 20px 64px; }
+  main { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+  header { display: flex; flex-direction: column; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand img { width: 52px; height: 52px; }
+  .brand span { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; }
+  h1 { margin: 0; font-size: clamp(2.2rem, 6vw, 3.4rem); line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; }
+  h1 em { font-style: normal; background: linear-gradient(100deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lede { margin: 0; color: var(--muted); font-size: 1.12rem; max-width: 56ch; }
+  .cta { align-self: flex-start; display: inline-block; padding: 12px 20px; border-radius: 12px; font-weight: 700; color: #fff; text-decoration: none; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+  .cta:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+  .shot { width: 100%; max-width: 100%; border-radius: 14px; border: 1px solid var(--line); display: block; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  li { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; min-width: 0; }
+  li b { display: block; margin-bottom: 4px; }
+  li span { color: var(--muted); font-size: 0.95rem; }
+  footer { color: var(--muted); font-size: 0.92rem; border-top: 1px solid var(--line); padding-top: 18px; display: flex; gap: 18px; flex-wrap: wrap; }
+  footer a { color: var(--fg); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand"><img src="icon-128.png" alt=""><span>CoWatch</span></div>
+    <h1>Same show, same second, <em>different couches.</em></h1>
+    <p class="lede">CoWatch keeps a video playing at the same moment for everyone in your room, with chat, reactions and games on top. Everyone uses their own streaming account. No sign-up, just a room code.</p>
+    <a class="cta" href="https://chromewebstore.google.com/detail/mgfbghbppjpfjldijjaphnnohnclbgoj">Add to Chrome</a>
+  </header>
+
+  <img class="shot" src="screenshot.png" alt="CoWatch chat floating over a video, with a reaction and a dock of party tools">
+
+  <ul>
+    <li><b>Stays in sync</b><span>Anyone can play, pause or skip and everyone follows.</span></li>
+    <li><b>Chat that hides</b><span>Press Enter to talk. Messages fade away on their own.</span></li>
+    <li><b>Party games</b><span>Predictions, watch bingo, a 3-2-1 start and stats.</span></li>
+    <li><b>Watch anything</b><span>Files you both have, links, or a shared tab.</span></li>
+  </ul>
+
+  <footer>
+    <a href="privacy.html">Privacy policy</a>
+    <span>Works in Chrome, Edge, Brave, Arc and Opera.</span>
+  </footer>
+</main>
+</body>
+</html>

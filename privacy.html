@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CoWatch Privacy Policy</title>
+<link rel="icon" href="icon-128.png">
+
+<style>
+  /* Layout: a single readable column, legal-document conventions (effective date, numbered-free plain sections), quiet accent for headings only. */
+  :root {
+    --bg: #fbfafc; --fg: #1d1b24; --muted: #5f5b6d; --line: #e4e1ea; --accent: #c8375a; --chip: #f1eef5;
+    --body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #121118; --fg: #eeecf3; --muted: #a29eb0; --line: #2c2a36; --accent: #ff7a93; --chip: #1d1c25; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --bg: #121118; --fg: #eeecf3; --muted: #a29eb0; --line: #2c2a36; --accent: #ff7a93; --chip: #1d1c25; color-scheme: dark; }
+  body { margin: 0;  background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.65; padding-inline: 20px; padding-block: 48px 72px; }
+  main { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+  header { display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--line); padding-bottom: 20px; }
+  h1 { margin: 0; font-size: clamp(1.8rem, 5vw, 2.4rem); letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+  .meta { color: var(--muted); font-size: 0.92rem; }
+  section { display: flex; flex-direction: column; gap: 10px; }
+  h2 { margin: 0; font-size: 1.12rem; color: var(--accent); letter-spacing: -0.005em; }
+  p, ul { margin: 0; }
+  ul { padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }
+  .summary { background: var(--chip); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .summary ul { margin-top: 6px; }
+  footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); padding-top: 18px; }
+</style>
+</head>
+<body>
+
+
+<main>
+  <header>
+    <h1>CoWatch Privacy Policy</h1>
+    <p class="meta">Effective October 10, 2026 · Applies to the CoWatch browser extension</p>
+  </header>
+
+  <div class="summary">
+    <strong>The short version</strong>
+    <ul>
+      <li>CoWatch has no accounts, no analytics, no ads and no tracking.</li>
+      <li>The developer does not collect, store, sell or share your data.</li>
+      <li>What you send to a watch party (your display name, chat, reactions, game moves and playback timing) goes only to the people in your room, encrypted with your room code.</li>
+    </ul>
+  </div>
+
+  <section>
+    <h2>What CoWatch does</h2>
+    <p>CoWatch keeps a video playing at the same moment for everyone in a “room”, and adds chat, reactions, games and statistics on top. Each person watches through their own streaming account. CoWatch never shares video, passwords or account details.</p>
+  </section>
+
+  <section>
+    <h2>Information shared with your room</h2>
+    <p>When you join a room, CoWatch sends these to the other people in that room so the features work:</p>
+    <ul>
+      <li>The display name you choose. It does not need to be your real name.</li>
+      <li>Playback events: play, pause, jumps, playback speed and the current time in the video.</li>
+      <li>The address and title of the video page you're on, so others can follow you to the same video.</li>
+      <li>Chat messages, emoji reactions, prediction and bingo moves, and scores.</li>
+    </ul>
+    <p>Before any of this leaves your browser, it is encrypted with a key that comes from your room code. Only people who have the code can read it.</p>
+  </section>
+
+  <section>
+    <h2>Relay servers</h2>
+    <p>To pass encrypted messages between room members without anyone hosting a server, CoWatch uses free public message relays (HiveMQ, EMQX and Eclipse Mosquitto). The relays only see encrypted data and an unreadable room identifier. Like any internet service, they can see your IP address while you're connected. Their own privacy policies apply to that connection. The developer of CoWatch does not operate the relays and does not receive any data from them.</p>
+  </section>
+
+  <section>
+    <h2>Streaming in the Theater</h2>
+    <p>If you choose to stream a file or share a tab or window, the video goes directly between your browser and the browsers of people in your room (WebRTC). To set up that direct connection, browsers contact public connection-helper (STUN) servers run by Google and Cloudflare. Those servers see your IP address but not the video. Nothing is streamed unless you start it, and you can stop at any time.</p>
+  </section>
+
+  <section>
+    <h2>Access to websites</h2>
+    <p>CoWatch runs on a fixed list of streaming sites (such as Netflix, Prime Video, YouTube and Disney+) so it can find and sync the video player and show the chat overlay there. On any other site it only runs if you turn it on for that site from the CoWatch button, and your browser asks you to approve it first. You can remove that access at any time in your browser's extension settings. On these pages CoWatch reads only the state of the video player (playing, paused and the current time) and the page address and title. It does not read or collect your browsing history, page contents, form entries, cookies or passwords. It is inactive on any page until you join a room in that tab.</p>
+  </section>
+
+  <section>
+    <h2>Data stored on your device</h2>
+    <p>CoWatch saves your display name, your current room, recent chat and game progress in your browser's own extension storage so they survive page reloads. This stays on your device. Removing the extension deletes it.</p>
+  </section>
+
+  <section>
+    <h2>Children</h2>
+    <p>CoWatch is not directed at children under 13 and does not knowingly collect information from them.</p>
+  </section>
+
+  <section>
+    <h2>Changes</h2>
+    <p>If this policy changes, the new version will be posted here with a new effective date. Changes that affect how data is shared will also be noted in the extension's store listing.</p>
+  </section>
+
+  <footer><a href="./" style="color:var(--accent)">CoWatch home</a> · Questions? Use the developer contact email shown on the CoWatch listing in the Chrome Web Store or Microsoft Edge Add-ons.</footer>
+</main>
+
+</body>
+</html>
