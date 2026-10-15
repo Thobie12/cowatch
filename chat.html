@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#111016">
+<meta name="robots" content="noindex">
+<title>CoWatch Chat</title>
+<link rel="icon" href="icon-128.png">
+<link rel="apple-touch-icon" href="icon-128.png">
+<style>
+  /* Layout: a phone chat app. Header (room + people), now-playing remote bar, scrolling messages, composer pinned to the bottom. Single dark look to match the extension. */
+  :root {
+    --bg: #111016; --surface: #1a1922; --surface-2: #24222e; --line: #2e2b3a;
+    --fg: #f1eff6; --muted: #a19db0; --accent: #ff6178; --accent-2: #ff9a62; --ok: #46d98b;
+    --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.4 var(--font); display: flex; flex-direction: column; -webkit-tap-highlight-color: transparent; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  header { display: flex; align-items: center; gap: 10px; padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px; border-bottom: 1px solid var(--line); }
+  header img { width: 28px; height: 28px; }
+  header .t { display: flex; flex-direction: column; min-width: 0; }
+  header b { font-size: 16px; }
+  header small { color: var(--muted); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #ffb020; display: inline-block; margin-right: 6px; vertical-align: middle; }
+  .dot.on { background: var(--ok); box-shadow: 0 0 6px var(--ok); }
+
+  .remote { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-bottom: 1px solid var(--line); background: var(--surface); }
+  .remote .np { flex: 1; min-width: 0; font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .remote button { border: 1px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 7px 10px; font-size: 13px; font-weight: 600; min-width: 44px; }
+
+  #log { flex: 1; overflow-y: auto; padding: 14px 12px; display: flex; flex-direction: column; gap: 6px; overscroll-behavior: contain; }
+  .msg { max-width: 82%; align-self: flex-start; background: var(--surface-2); padding: 8px 12px; border-radius: 16px 16px 16px 6px; word-wrap: break-word; }
+  .msg.me { align-self: flex-end; background: linear-gradient(135deg, var(--accent), #ff7a6a); border-radius: 16px 16px 6px 16px; }
+  .msg .who { display: block; font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+  .msg.big { font-size: 34px; background: transparent; padding: 0 4px; }
+  .sys { align-self: center; color: var(--muted); font-size: 12.5px; padding: 2px 8px; }
+  .voice { display: flex; align-items: center; gap: 10px; min-width: 160px; }
+  .voice button { width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(255,255,255,.2); display: grid; place-items: center; flex: none; }
+  .voice .bar { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,.25); overflow: hidden; }
+  .voice .bar i { display: block; height: 100%; width: 0; background: #fff; }
+  .typing { color: var(--muted); font-size: 12.5px; padding: 0 16px 4px; min-height: 18px; }
+
+  .emojis { display: none; grid-template-columns: repeat(8, 1fr); gap: 2px; padding: 8px 10px; border-top: 1px solid var(--line); max-height: 190px; overflow-y: auto; background: var(--surface); }
+  .emojis.open { display: grid; }
+  .emojis button { border: 0; background: transparent; font-size: 26px; padding: 6px 0; border-radius: 10px; }
+  .composer { display: flex; align-items: center; gap: 8px; padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); background: var(--bg); }
+  .composer input { flex: 1; min-width: 0; border: 1px solid var(--line); background: var(--surface); color: var(--fg); border-radius: 999px; padding: 11px 16px; font: inherit; font-size: 16px; outline: none; }
+  .composer input:focus { border-color: var(--accent); }
+  .ib { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--surface-2); display: grid; place-items: center; flex: none; }
+  .ib.send { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; }
+  .ib.rec { background: #ff4d5e; color: #fff; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(255,77,94,.3); } }
+  .recnote { display: none; padding: 0 16px 6px; color: #ff8a95; font-size: 13px; }
+  .recnote.on { display: block; }
+
+  .join { margin: auto; width: min(420px, 100%); padding: 24px 20px; display: flex; flex-direction: column; gap: 14px; }
+  .join h1 { margin: 0; font-size: 26px; letter-spacing: -.02em; }
+  .join p { margin: 0; color: var(--muted); }
+  .join label { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+  .join input { width: 100%; border: 1px solid var(--line); background: var(--surface); color: var(--fg); border-radius: 12px; padding: 12px 14px; font: inherit; font-size: 16px; outline: none; }
+  .join input:focus { border-color: var(--accent); }
+  .join button { border: 0; border-radius: 12px; padding: 13px; font-weight: 700; color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+  .hidden { display: none !important; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+</style>
+</head>
+<body>
+  <section class="join hidden" id="join">
+    <img src="icon-128.png" alt="" width="48" height="48">
+    <h1>CoWatch chat</h1>
+    <p>Chat with your watch party from your phone. Enter the room code shown in the CoWatch button on the computer.</p>
+    <div><label for="jcode">Room code</label><input id="jcode" autocomplete="off" autocapitalize="none" placeholder="peach-otter-moon-17"></div>
+    <div><label for="jname">Your name</label><input id="jname" autocomplete="nickname" maxlength="24" placeholder="What friends call you"></div>
+    <button id="jgo" type="button">Join chat</button>
+  </section>
+
+  <header class="hidden" id="head">
+    <img src="icon-128.png" alt="">
+    <div class="t"><b>CoWatch chat</b><small><span class="dot" id="dot"></span><span id="status">Connecting…</span></small></div>
+  </header>
+  <div class="remote hidden" id="remote">
+    <span class="np" id="np">Waiting for the video…</span>
+    <button data-r="back10" type="button" aria-label="Back 10 seconds">−10</button>
+    <button data-r="toggle" type="button" aria-label="Play or pause"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M4 5.5v13l8-6.5zM14 5h3v14h-3zM19 5h2v14h-2z"/></svg></button>
+    <button data-r="fwd10" type="button" aria-label="Forward 10 seconds">+10</button>
+  </div>
+  <main id="log" class="hidden" aria-live="polite"></main>
+  <div class="typing hidden" id="typing"></div>
+  <div class="recnote" id="recnote">Recording… tap the mic again to send</div>
+  <div class="emojis" id="emojis"></div>
+  <footer class="composer hidden" id="composer">
+    <button class="ib" id="emojiBtn" type="button" aria-label="Emoji">😊</button>
+    <input id="text" maxlength="400" placeholder="Message" autocomplete="off" enterkeyhint="send">
+    <button class="ib" id="mic" type="button" aria-label="Voice note"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></button>
+    <button class="ib send" id="send" type="button" aria-label="Send"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+  </footer>
+  <script type="module" src="chat.js"></script>
+</body>
+</html>
